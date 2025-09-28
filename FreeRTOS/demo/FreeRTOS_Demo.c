@@ -42,13 +42,6 @@ void AS608_task(void *pvParameters);
 #define ESP8266_TASK_PRIO 3//任务的优先级
 TaskHandle_t ESP8266Task_Handler;//任务句柄
 void ESP8266_task(void *pvParameters);
-/***************任务的配置**********************/
-#define TASK1_STACK 512//任务栈的大小
-#define TASK1_PRIORITY 2//任务的优先级
-TaskHandle_t task1_handler;//任务句柄
-void task1(void *pvParameters);
-
-
 /***************事件标志组的配置**********************/
 EventGroupHandle_t EventGroupHandler;//事件标志组句柄
 #define EVENTBIT_0	(1<<0)				//事件位
@@ -93,29 +86,65 @@ void freertos_start(void){
 
 void start_task(void *pvParameters){
 
+    BaseType_t xReturn;
     //进入临界区：保护临界区里的代码不会被打断
     taskENTER_CRITICAL();//进入临界区
 
-    //创建任务1
-    xTaskCreate((TaskFunction_t)Task1,                    
-                (char *)"Task1",                           
-                (configSTACK_DEPTH_TYPE)TASK1_STACK_DEPTH, 
+    //创建SG90任务
+    xReturn = xTaskCreate((TaskFunction_t)SG90_task,                    
+                (char *)"SG90_task",                           
+                (configSTACK_DEPTH_TYPE)SG90_STK_SIZE, 
                 (void *)NULL,                                   
-                (UBaseType_t)TASK1_PRIORITY,               
-                (TaskHandle_t *)&task1_handler             
+                (UBaseType_t)SG90_TASK_PRIO,               
+                (TaskHandle_t *)&SG90Task_Handler             
                );
-
-    //创建任务2
-    xTaskCreate((TaskFunction_t)Task2,                    
-                (char *)"Task2",                           
-                (configSTACK_DEPTH_TYPE)TASK2_STACK_DEPTH, 
+    if(xReturn==pdPass){
+        printf("SG90_TASK任务创建成功");
+    }
+    //创建LCD任务
+    xReturn = xTaskCreate((TaskFunction_t)LCD_task,                    
+                (char *)"LCD_task",                           
+                (configSTACK_DEPTH_TYPE)LCD_STK_SIZE, 
                 (void *)NULL,                                   
-                (UBaseType_t)TASK2_PRIORITY,               
-                (TaskHandle_t *)&task2_handler             
+                (UBaseType_t)LCD_TASK_PRIO,               
+                (TaskHandle_t *)&LCDTask_Handler             
                );
-    
-
-
+    if(xReturn==pdPass){
+        printf("LCD_TASK任务创建成功");
+    }
+    //创建RFID识别卡任务
+    xReturn = xTaskCreate((TaskFunction_t)RFID_task,                    
+                (char *)"RFID_task",                           
+                (configSTACK_DEPTH_TYPE)RFID_STK_SIZE, 
+                (void *)NULL,                                   
+                (UBaseType_t)RFID_TASK_PRIO,               
+                (TaskHandle_t *)&RFIDTask_Handler             
+               );
+    if(xReturn==pdPass){
+        printf("RFID_TASK任务创建成功");
+    }
+    //创建AS608指纹识别任务
+    xReturn = xTaskCreate((TaskFunction_t)AS608_task,                    
+                (char *)"AS608_task",                           
+                (configSTACK_DEPTH_TYPE)AS608_STK_SIZE, 
+                (void *)NULL,                                   
+                (UBaseType_t)AS608_TASK_PRIO,               
+                (TaskHandle_t *)&AS608Task_Handler             
+               );
+    if(xReturn==pdPass){
+        printf("AS608_TASK任务创建成功");
+    }
+    //创建ESP8266任务
+    xReturn = xTaskCreate((TaskFunction_t)ESP8266_task,                    
+                (char *)"ESP8266_task",                           
+                (configSTACK_DEPTH_TYPE)ESP8266_STK_SIZE, 
+                (void *)NULL,                                   
+                (UBaseType_t)ESP8266_TASK_PRIO,               
+                (TaskHandle_t *)&ESP8266Task_Handler             
+               );
+    if(xReturn==pdPass){
+        printf("AS608_TASK任务创建成功");
+    }
     //删除启动任务,因为启动任务的任务已经完成了,所以删除启动任务
     vTaskDelete(NULL);
 
