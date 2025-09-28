@@ -17,31 +17,37 @@
 #define START_TASK_PRIO 1//任务的优先级
 TaskHandle_t StartTask_Handler;//任务句柄
 void start_task(void *pvParameters);
-/***************舵机任务的配置**********************/
+
+/***************1-舵机任务的配置**********************/
 #define SG90_STK_SIZE 512//任务栈的大小
 #define SG90_TASK_PRIO 4//任务的优先级
 TaskHandle_t SG90Task_Handler;//任务句柄
 void SG90_task(void *pvParameters);
-/***************LCD任务的配置**********************/
+
+/***************2-LCD任务的配置**********************/
 #define LCD_STK_SIZE 512//任务栈的大小
 #define LCD_TASK_PRIO 3//任务的优先级
 TaskHandle_t  LCDTask_Handler;//任务句柄
 void LCD_task(void *pvParameters);
-/***************识别卡任务的配置**********************/
+
+/***************3-识别卡任务的配置**********************/
 #define RFID_STK_SIZE 512//任务栈的大小
 #define RFID_TASK_PRIO 3//任务的优先级
 TaskHandle_t RFIDTask_Handler;//任务句柄
 void RFID_task(void *pvParameters);
-/***************指纹识别任务的配置**********************/
+
+/***************4-指纹识别任务的配置**********************/
 #define AS608_STK_SIZE 512//任务栈的大小
 #define AS608_TASK_PRIO 3//任务的优先级
 TaskHandle_t AS608Task_Handler;//任务句柄
 void AS608_task(void *pvParameters);
-/***************ESP8266任务的配置**********************/
+
+/***************5-ESP8266任务的配置**********************/
 #define ESP8266_STK_SIZE 512//任务栈的大小
 #define ESP8266_TASK_PRIO 3//任务的优先级
 TaskHandle_t ESP8266Task_Handler;//任务句柄
 void ESP8266_task(void *pvParameters);
+
 /***************事件标志组的配置**********************/
 EventGroupHandle_t EventGroupHandler;//事件标志组句柄
 #define EVENTBIT_0	(1<<0)				//事件位
@@ -90,7 +96,7 @@ void start_task(void *pvParameters){
     //进入临界区：保护临界区里的代码不会被打断
     taskENTER_CRITICAL();//进入临界区
 
-    //创建SG90任务
+    //1-创建SG90任务
     xReturn = xTaskCreate((TaskFunction_t)SG90_task,                    
                 (char *)"SG90_task",                           
                 (configSTACK_DEPTH_TYPE)SG90_STK_SIZE, 
@@ -99,9 +105,9 @@ void start_task(void *pvParameters){
                 (TaskHandle_t *)&SG90Task_Handler             
                );
     if(xReturn==pdPass){
-        printf("SG90_TASK任务创建成功");
+        printf("SG90_TASK任务创建成功\r\n");
     }
-    //创建LCD任务
+    //2-创建LCD任务
     xReturn = xTaskCreate((TaskFunction_t)LCD_task,                    
                 (char *)"LCD_task",                           
                 (configSTACK_DEPTH_TYPE)LCD_STK_SIZE, 
@@ -110,9 +116,9 @@ void start_task(void *pvParameters){
                 (TaskHandle_t *)&LCDTask_Handler             
                );
     if(xReturn==pdPass){
-        printf("LCD_TASK任务创建成功");
+        printf("LCD_TASK任务创建成功\r\n");
     }
-    //创建RFID识别卡任务
+    //3-创建RFID识别卡任务
     xReturn = xTaskCreate((TaskFunction_t)RFID_task,                    
                 (char *)"RFID_task",                           
                 (configSTACK_DEPTH_TYPE)RFID_STK_SIZE, 
@@ -121,9 +127,9 @@ void start_task(void *pvParameters){
                 (TaskHandle_t *)&RFIDTask_Handler             
                );
     if(xReturn==pdPass){
-        printf("RFID_TASK任务创建成功");
+        printf("RFID_TASK任务创建成功\r\n");
     }
-    //创建AS608指纹识别任务
+    //4-创建AS608指纹识别任务
     xReturn = xTaskCreate((TaskFunction_t)AS608_task,                    
                 (char *)"AS608_task",                           
                 (configSTACK_DEPTH_TYPE)AS608_STK_SIZE, 
@@ -132,9 +138,9 @@ void start_task(void *pvParameters){
                 (TaskHandle_t *)&AS608Task_Handler             
                );
     if(xReturn==pdPass){
-        printf("AS608_TASK任务创建成功");
+        printf("AS608_TASK任务创建成功\r\n");
     }
-    //创建ESP8266任务
+    //5-创建ESP8266任务
     xReturn = xTaskCreate((TaskFunction_t)ESP8266_task,                    
                 (char *)"ESP8266_task",                           
                 (configSTACK_DEPTH_TYPE)ESP8266_STK_SIZE, 
@@ -143,7 +149,7 @@ void start_task(void *pvParameters){
                 (TaskHandle_t *)&ESP8266Task_Handler             
                );
     if(xReturn==pdPass){
-        printf("AS608_TASK任务创建成功");
+        printf("ESP8266_TASK任务创建成功\r\n");
     }
     //删除启动任务,因为启动任务的任务已经完成了,所以删除启动任务
     vTaskDelete(NULL);
@@ -152,46 +158,48 @@ void start_task(void *pvParameters){
     taskEXIT_CRITICAL();//退出临界区
 }
 
-//任务1的具体实现
-void task1(void *pvParameters){
-
-    uint8_t key = 0;
+//舵机任务的具体实现
+void SG90_task(void *pvParameters){
+    volatile EventBits_t EventValue;
     while(1){
-        key = Key_Delect();
-        if(key==KEY1_PRESS){
-            //key1按下，给bit0置1
-            //参数：事件标志组句柄，要设置的值
-            //返回值是更新后的结果
-            xEventGroupSetBits(event_group_handle,EVENTBIT_0);
-            printf("key1按下,bit0置1\r\n");
-        }
-        else if(key==KEY2_PRESS){
-            //key2按下，给bit1置1
-            xEventGroupSetBits(event_group_handle,EVENTBIT_1);
-            printf("key1按下,bit1置1\r\n");
-        }
-
-        vTaskDelay(500);
-    }
-}
-
-//任务2的具体实现
-void task2(void *pvParameters){
-    EventBits_t event_bits = 0;
-     while(1){
-        //等待事件标志组
-        //参数：事件标志组句柄，等待哪一些比特位，
-        // 退出时是否清除，是否等待所有标志位成立，
-        // 是否进行阻塞地等待
-        //返回时就是更新后的事件标志组
-        event_bits = xEventGroupWaitBits(
-            event_group_handle,
-            EVENTBIT_0 | EVENTBIT_1,//用|连接
-            pdTRUE,//表示退出时要进行清除
-            pdTRUE,//表示都得满足
+        EventValue = xEventGroupWaitBits(
+            EventGroupHandler,//事件标志组句柄
+            EVENTBIT_ALL,//等待哪些标志位，这里是全部
+            pdTRUE,      //退出时进行清除
+            pdFALSE,     //不需要都满足
             portMAX_DELAY
-        ); 
-        printf("Task2接收到的事件标志组= %#x.....\r\n",event_bits);
+        );
+        printf("接收事件成功\r\n");
+        //舵机转动模拟开关门
+        set_Angle(180);
+        delay_xms(1000);
+        delay_xms(1000);
+        set_Angle(0);
+        LCD_ShowString(80,150,260,16,16,"                  ");
+        vTaskDelay(100);//延时10ms，也就是10个时钟节拍
     }
 }
 
+void LCD_task(void *pvParameters){
+    while(1){
+
+    }
+}
+
+void RFID_task(void *pvParameters){
+    while(1){
+        
+    }
+}
+
+void AS608_task(void *pvParameters){
+    while(1){
+
+    }
+}
+
+void ESP8266_task(void *pvParameters){
+    while(1){
+
+    }
+}
