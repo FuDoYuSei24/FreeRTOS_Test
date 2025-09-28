@@ -1,0 +1,16 @@
+hal_key\tasks.o: ..\FreeRTOS\source\tasks.c
+hal_key\tasks.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+hal_key\tasks.o: D:\Keil5\ARM\ARMCC\Bin\..\include\string.h
+hal_key\tasks.o: ..\FreeRTOS\include\FreeRTOS.h
+hal_key\tasks.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stddef.h
+hal_key\tasks.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
+hal_key\tasks.o: ../Core/Inc/FreeRTOSConfig.h
+hal_key\tasks.o: ..\FreeRTOS\include\projdefs.h
+hal_key\tasks.o: ..\FreeRTOS\include\portable.h
+hal_key\tasks.o: ..\FreeRTOS\include\deprecated_definitions.h
+hal_key\tasks.o: ..\FreeRTOS\portable\RVDS\ARM_CM3\portmacro.h
+hal_key\tasks.o: ..\FreeRTOS\include\mpu_wrappers.h
+hal_key\tasks.o: ..\FreeRTOS\include\task.h
+hal_key\tasks.o: ..\FreeRTOS\include\list.h
+hal_key\tasks.o: ..\FreeRTOS\include\timers.h
+hal_key\tasks.o: ..\FreeRTOS\include\stack_macros.h

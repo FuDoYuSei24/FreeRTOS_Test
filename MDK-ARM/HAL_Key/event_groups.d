@@ -1,0 +1,15 @@
+hal_key\event_groups.o: ..\FreeRTOS\source\event_groups.c
+hal_key\event_groups.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+hal_key\event_groups.o: ..\FreeRTOS\include\FreeRTOS.h
+hal_key\event_groups.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stddef.h
+hal_key\event_groups.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
+hal_key\event_groups.o: ../Core/Inc/FreeRTOSConfig.h
+hal_key\event_groups.o: ..\FreeRTOS\include\projdefs.h
+hal_key\event_groups.o: ..\FreeRTOS\include\portable.h
+hal_key\event_groups.o: ..\FreeRTOS\include\deprecated_definitions.h
+hal_key\event_groups.o: ..\FreeRTOS\portable\RVDS\ARM_CM3\portmacro.h
+hal_key\event_groups.o: ..\FreeRTOS\include\mpu_wrappers.h
+hal_key\event_groups.o: ..\FreeRTOS\include\task.h
+hal_key\event_groups.o: ..\FreeRTOS\include\list.h
+hal_key\event_groups.o: ..\FreeRTOS\include\timers.h
+hal_key\event_groups.o: ..\FreeRTOS\include\event_groups.h
