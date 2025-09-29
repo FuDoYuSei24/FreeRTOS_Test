@@ -7,13 +7,13 @@
 void esp8266_start_trans(void)
 {
     esp8266_send_cmd("AT+CWMODE=2","OK",50);
-	//WifiÄ£¿éÖØÆô
+	//Wifiæ¨¡å—é‡å¯
 	esp8266_send_cmd("AT+RST","OK",20);
-	delay_ms(1000);         //ÑÓÊ±3SµÈ´ıÖØÆô³É¹¦
+	delay_ms(1000);         //å»¶æ—¶3Sç­‰å¾…é‡å¯æˆåŠŸ
 	delay_ms(1000);
 	delay_ms(1000);	
-    //APÄ£Ê½
-	esp8266_send_cmd("AT+CWSAP=\"ÏëÑ§ESP8266Âğ\",\"84758783\",11,3","OK",200);
+    //APæ¨¡å¼
+	esp8266_send_cmd("AT+CWSAP=\"æƒ³å­¦ESP8266å—\",\"84758783\",11,3","OK",200);
 	esp8266_send_cmd("AT+CIPMUX=1","OK",20);
 	esp8266_send_cmd("AT+CIPSERVER=1,8086","OK",200);
 	esp8266_send_cmd("AT+CIFSR","OK",200);
@@ -24,22 +24,22 @@ void esp8266_start_trans(void)
 }	
 
 
-u8 esp8266_send_cmd(u8 *cmd,u8 *ack,u16 waittime)
+uint8_t esp8266_send_cmd(uint8_t *cmd,uint8_t *ack,uint16_t waittime)
 {
-	u8 res=0; 
+	uint8_t res=0; 
 	USART3_RX_STA=0;
-	u3_printf("%s\r\n",cmd);	//·¢ËÍÃüÁî
-	if(ack&&waittime)		//ĞèÒªµÈ´ıÓ¦´ğ
+	u3_printf("%s\r\n",cmd);	//å‘é€å‘½ä»¤
+	if(ack&&waittime)		//éœ€è¦ç­‰å¾…åº”ç­”
 	{
-		while(--waittime)	//µÈ´ıµ¹¼ÆÊ±
+		while(--waittime)	//ç­‰å¾…å€’è®¡æ—¶
 		{
 			delay_ms(10);
-			if(USART3_RX_STA&0X8000)//½ÓÊÕµ½ÆÚ´ıµÄÓ¦´ğ½á¹û
+			if(USART3_RX_STA&0X8000)//æ¥æ”¶åˆ°æœŸå¾…çš„åº”ç­”ç»“æœ
 			{
 				if(esp8266_check_cmd(ack))
 				{
-					printf("ack:%s\r\n",(u8*)ack);
-					break;//µÃµ½ÓĞĞ§Êı¾İ 
+					printf("ack:%s\r\n",(uint8_t*)ack);
+					break;//å¾—åˆ°æœ‰æ•ˆæ•°æ®  
 				}
 					USART3_RX_STA=0;
 			} 
@@ -49,15 +49,15 @@ u8 esp8266_send_cmd(u8 *cmd,u8 *ack,u16 waittime)
 	return res;
 }
 
-u8* esp8266_check_cmd(u8 *str)
+uint8_t* esp8266_check_cmd(uint8_t *str)
 {
 	char *strx=0;
-	if(USART3_RX_STA&0X8000)		//½ÓÊÕµ½Ò»´ÎÊı¾İÁË
+	if(USART3_RX_STA&0X8000)		//æ¥æ”¶åˆ°ä¸€æ¬¡æ•°æ®äº†
 	{ 
-		USART3_RX_BUF[USART3_RX_STA&0X7FFF]=0;//Ìí¼Ó½áÊø·û
+		USART3_RX_BUF[USART3_RX_STA&0X7FFF]=0;//æ·»åŠ ç»“æŸç¬¦
 		strx=strstr((const char*)USART3_RX_BUF,(const char*)str);
 	} 
-	return (u8*)strx;
+	return (uint8_t*)strx;
 }
 
 

@@ -307,6 +307,22 @@ void AS608_task(void *pvParameters){
 
 void ESP8266_task(void *pvParameters){
     while(1){
+        if(USART3_RX_STA){
+            if(strstr((const char*)UASRT3_RX_BUF,"on")){
+                BEEP=1;
+                delay_xms(100);
+                BEEP=0;
+                printf("开门成功\r\n");
+                xEventGroupSetBits(EventGroupHandler,EVENTBIT_0);
+                memset(USART3_RX_BUF,0,sizeof(USART3_RX_BUF));
+            }
+            if(!strstr((const char*)UASRT3_RX_BUF,"on")){
+                printf("密码错误\r\n");
+                memset(USART3_RX_BUF,0,sizeof(USART3_RX_BUF));
+            }
 
+            USART3_RX_STA=0;
+        }
+        vTaskDelay(100);
     }
 }
