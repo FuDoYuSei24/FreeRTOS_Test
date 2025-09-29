@@ -55,11 +55,12 @@ EventGroupHandle_t EventGroupHandler;//事件标志组句柄
 #define EVENTBIT_2	(1<<2)
 #define EVENTBIT_ALL	(EVENTBIT_0|EVENTBIT_1|EVENTBIT_2)
 
+/*****************其他变量的声明与定义********************/
 const  u8* kbd_menu[15]={"coded"," : ","lock","1","2","3","4","5","6","7","8","9","DEL","0","Enter",};//按键表
-u8 sg90flag;
-u8 rfidflag;
-u8 key;
-u8 err=0;
+uint8_t sg90flag;
+uint8_t rfidflag;
+uint8_t key;
+uint8_t err=0;
 
 /*
 *@brief  创建一个启动任务，并且启动调度器
@@ -181,8 +182,40 @@ void SG90_task(void *pvParameters){
 }
 
 void LCD_task(void *pvParameters){
-    while(1){
 
+    while(1){
+        //密码正确
+        if(sg90flag==1||GET_NUM()){
+
+            BEEP=1;
+            delay_xms(100);
+            BEEP=0;
+            printf("密码正确\r\n");
+            LCD_ShowString(80,150,260,16,16,"Password Match");
+        }
+        //密码错误
+        else {
+            BEEP=1;
+            delay_xms(50);
+            BEEP=0;
+            delay_xms(50);
+            BEEP=1;
+            delay_xms(50);
+            BEEP=0;
+            delay_xms(50);
+            BEEP=1;
+            delay_xms(50);
+            BEEP=0;
+            printf("密码错误\r\n");
+            LCD_ShowString(80,150,260,16,16,"Password Error");
+            err++;
+            //输入错误次数超过3次锁死
+            if(err==3){
+                printf("\r\n");
+                LCD_ShowString(0,100,260,16,16,"Task has been suspended");
+            }
+        }
+        vTaskDelay(100);
     }
 }
 
