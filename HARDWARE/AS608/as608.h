@@ -3,67 +3,67 @@
 #include <stdio.h>
 #include "stm32f4xx.h" 
 
-#define PS_Sta   PAin(6)//¶ÁÖ¸ÎÆÄ£¿é×´Ì¬Òý½Å
+#define PS_Sta   PAin(6)//ï¿½ï¿½Ö¸ï¿½ï¿½Ä£ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½
 #define CharBuffer1 0x01
 #define CharBuffer2 0x02
 
-extern u32 AS608Addr;//Ä£¿éµØÖ·
+extern uint32_t AS608Addr;//Ä£ï¿½ï¿½ï¿½Ö·
 
 typedef struct  
 {
-	u16 pageID;//Ö¸ÎÆID
-	u16 mathscore;//Æ¥ÅäµÃ·Ö
+	uint16_t pageID;//Ö¸ï¿½ï¿½ID
+	uint16_t mathscore;//Æ¥ï¿½ï¿½Ã·ï¿½
 }SearchResult;
 
 typedef struct
 {
-	u16 PS_max;//Ö¸ÎÆ×î´óÈÝÁ¿
-	u8  PS_level;//°²È«µÈ¼¶
-	u32 PS_addr;
-	u8  PS_size;//Í¨Ñ¶Êý¾Ý°ü´óÐ¡
-	u8  PS_N;//²¨ÌØÂÊ»ùÊýN
+	uint16_t PS_max;//Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	uint8_t  PS_level;//ï¿½ï¿½È«ï¿½È¼ï¿½
+	uint32_t PS_addr;
+	uint8_t  PS_size;//Í¨Ñ¶ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½Ð¡
+	uint8_t  PS_N;//ï¿½ï¿½ï¿½ï¿½ï¿½Ê»ï¿½ï¿½ï¿½N
 }SysPara;
 
-void PS_StaGPIO_Init(void);//³õÊ¼»¯PA6¶Á×´Ì¬Òý½Å
+void PS_StaGPIO_Init(void);//ï¿½ï¿½Ê¼ï¿½ï¿½PA6ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½
 	
-u8 PS_GetImage(void); //Â¼ÈëÍ¼Ïñ 
+uint8_t PS_GetImage(void); //Â¼ï¿½ï¿½Í¼ï¿½ï¿½ 
  
-u8 PS_GenChar(u8 BufferID);//Éú³ÉÌØÕ÷ 
+uint8_t PS_GenChar(uint8_t BufferID);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 
-u8 PS_Match(void);//¾«È·±È¶ÔÁ½Ã¶Ö¸ÎÆÌØÕ÷ 
+uint8_t PS_Match(void);//ï¿½ï¿½È·ï¿½È¶ï¿½ï¿½ï¿½Ã¶Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 
-u8 PS_Search(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p);//ËÑË÷Ö¸ÎÆ 
+uint8_t PS_Search(uint8_t BufferID,uint16_t StartPage,uint16_t PageNum,SearchResult *p);//ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ 
  
-u8 PS_RegModel(void);//ºÏ²¢ÌØÕ÷£¨Éú³ÉÄ£°å£© 
+uint8_t PS_RegModel(void);//ï¿½Ï²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½å£© 
  
-u8 PS_StoreChar(u8 BufferID,u16 PageID);//´¢´æÄ£°å 
+uint8_t PS_StoreChar(uint8_t BufferID,uint16_t PageID);//ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ 
 
-u8 PS_DeletChar(u16 PageID,u16 N);//É¾³ýÄ£°å 
+uint8_t PS_DeletChar(uint16_t PageID,uint16_t N);//É¾ï¿½ï¿½Ä£ï¿½ï¿½ 
 
-u8 PS_Empty(void);//Çå¿ÕÖ¸ÎÆ¿â 
+uint8_t PS_Empty(void);//ï¿½ï¿½ï¿½Ö¸ï¿½Æ¿ï¿½ 
 
-u8 PS_WriteReg(u8 RegNum,u8 DATA);//Ð´ÏµÍ³¼Ä´æÆ÷ 
+uint8_t PS_WriteReg(uint8_t RegNum,uint8_t DATA);//Ð´ÏµÍ³ï¿½Ä´ï¿½ï¿½ï¿½ 
  
-u8 PS_ReadSysPara(SysPara *p); //¶ÁÏµÍ³»ù±¾²ÎÊý 
+uint8_t PS_ReadSysPara(SysPara *p); //ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 
-u8 PS_SetAddr(u32 addr);  //ÉèÖÃÄ£¿éµØÖ· 
+uint8_t PS_SetAddr(u32 addr);  //ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ö· 
 
-u8 PS_WriteNotepad(u8 NotePageNum,u8 *content);//Ð´¼ÇÊÂ±¾ 
+uint8_t PS_WriteNotepad(uint8_t NotePageNum,uint8_t *content);//Ð´ï¿½ï¿½ï¿½Â±ï¿½ 
 
-u8 PS_ReadNotepad(u8 NotePageNum,u8 *note);//¶Á¼ÇÊÂ 
+uint8_t PS_ReadNotepad(uint8_t NotePageNum,uint8_t *note);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 
-u8 PS_HighSpeedSearch(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p);//¸ßËÙËÑË÷ 
+uint8_t PS_HighSpeedSearch(uint8_t BufferID,uint16_t StartPage,uint16_t PageNum,SearchResult *p);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
   
-u8 PS_ValidTempleteNum(u16 *ValidN);//¶ÁÓÐÐ§Ä£°å¸öÊý 
+uint8_t PS_ValidTempleteNum(uint16_t *ValidN);//ï¿½ï¿½ï¿½ï¿½Ð§Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ 
 
-u8 PS_HandShake(u32 *PS_Addr); //ÓëAS608Ä£¿éÎÕÊÖ
+uint8_t PS_HandShake(u32 *PS_Addr); //ï¿½ï¿½AS608Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-const char *EnsureMessage(u8 ensure);//È·ÈÏÂë´íÎóÐÅÏ¢½âÎö
+const char *EnsureMessage(uint8_t ensure);//È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
 
 
 
 void AS608_Init(void);
-u8 press_FR(void);
+uint8_t press_FR(void);
 #endif
 
 

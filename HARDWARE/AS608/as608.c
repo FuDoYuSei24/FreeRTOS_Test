@@ -4,29 +4,29 @@
 #include "usart2.h"
 #include "as608.h"
 
-u32 AS608Addr = 0XFFFFFFFF; //Ä¬ÈÏ
-//³õÊ¼»¯PA6ÎªÏÂÀ­ÊäÈë		    
-//¶ÁÃş³ö¸ĞÓ¦×´Ì¬(´¥Ãş¸ĞÓ¦Ê±Êä³ö¸ßµçÆ½ĞÅºÅ)
+uint32_t AS608Addr = 0XFFFFFFFF; //é»˜è®¤
+//åˆå§‹åŒ–PA6ä¸ºä¸‹æ‹‰è¾“å…¥		    
+//è¯»æ‘¸å‡ºæ„Ÿåº”çŠ¶æ€(è§¦æ‘¸æ„Ÿåº”æ—¶è¾“å‡ºé«˜ç”µå¹³ä¿¡å·)
 
  SysPara AS608Para;
-u8 ensure1;
-u16 ValidN;//Ä£¿éÄÚÓĞĞ§Ö¸ÎÆ¸öÊı
+uint8_t ensure1;
+uint16_t ValidN;//æ¨¡å—å†…æœ‰æ•ˆæŒ‡çº¹ä¸ªæ•°
 
 void AS608_Init(void)
 {
-   printf("\r\nÓëAS608Ä£¿éÎÕÊÖ....\r\n");
-	while(PS_HandShake(&AS608Addr))//ÓëAS608Ä£¿éÎÕÊÖ
+   printf("\r\nä¸AS608æ¨¡å—æ¡æ‰‹....\r\n");
+	while(PS_HandShake(&AS608Addr))//ä¸AS608æ¨¡å—æ¡æ‰‹
 	{
 		delay_ms(400);
-		printf("\r\nÎ´¼ì²âµ½Ä£¿é!!!\r\n");
+		printf("\r\næœªæ£€æµ‹åˆ°æ¨¡å—!!!\r\n");
 		delay_ms(800);
-		printf("\r\n³¢ÊÔÁ¬½ÓÄ£¿é...\r\n");
+		printf("\r\nå°è¯•è¿æ¥æ¨¡å—...\r\n");
 	}
-	printf("\r\nÍ¨Ñ¶³É¹¦!!!\r\n");
+	printf("\r\né€šè®¯æˆåŠŸ!!!\r\n");
 
-	ensure1=PS_ValidTempleteNum(&ValidN);//¶Á¿âÖ¸ÎÆ¸öÊı
+	ensure1=PS_ValidTempleteNum(&ValidN);//è¯»åº“æŒ‡çº¹ä¸ªæ•°
 
-	ensure1=PS_ReadSysPara(&AS608Para);  //¶Á²ÎÊı 
+	ensure1=PS_ReadSysPara(&AS608Para);  //è¯»å‚æ•° 
 
 
 
@@ -35,30 +35,30 @@ void AS608_Init(void)
 
 
 
-u8 press_FR(void)
+uint8_t press_FR(void)
 {
 	SearchResult seach;
-	u8 ensure;
+	uint8_t ensure;
 	
 	ensure=PS_GetImage();
-	if(ensure==0x00)//»ñÈ¡Í¼Ïñ³É¹¦ 
+	if(ensure==0x00)//è·å–å›¾åƒæˆåŠŸ 
 	{	
-    printf("»ñÈ¡Í¼Ïñ³É¹¦\r\n");
+    printf("è·å–å›¾åƒæˆåŠŸ\r\n");
 		ensure=PS_GenChar(CharBuffer1);
-		if(ensure==0x00) //Éú³ÉÌØÕ÷³É¹¦
+		if(ensure==0x00) //ç”Ÿæˆç‰¹å¾æˆåŠŸ
 		{		
-      printf("Éú³ÉÌØÕ÷³É¹¦\r\n");
+      printf("ç”Ÿæˆç‰¹å¾æˆåŠŸ\r\n");
 			ensure=PS_HighSpeedSearch(CharBuffer1,0,AS608Para.PS_max,&seach);
-			if(ensure==0x00)//ËÑË÷³É¹¦
+			if(ensure==0x00)//æœç´¢æˆåŠŸ
 			{				
         
-				printf("ÕıÈ·\r\n");
+				printf("æ­£ç¡®È·\r\n");
 				return 1;
 
 			}
 			else 
 			{
-				printf("´íÎó\r\n");
+				printf("é”™è¯¯\r\n");
 			  return 0;
 			}
 									
@@ -77,27 +77,27 @@ u8 press_FR(void)
 void PS_StaGPIO_Init(void)
 {   
   GPIO_InitTypeDef  GPIO_InitStructure;
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//Ê¹ÄÜGPIOAÊ±ÖÓ
-  //³õÊ¼»¯¶Á×´Ì¬Òı½ÅGPIOA
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//ä½¿èƒ½GPIOAæ—¶é’Ÿ
+  //åˆå§‹åŒ–è¯»çŠ¶æ€å¼•è„šGPIOA
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;//ÊäÈëÄ£Ê½
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;//ÏÂÀ­Ä£Ê½
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;//è¾“å…¥æ¨¡å¼
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;//ä¸‹æ‹‰æ¨¡å¼
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
-  GPIO_Init(GPIOA, &GPIO_InitStructure);//³õÊ¼»¯GPIO	
+  GPIO_Init(GPIOA, &GPIO_InitStructure);//åˆå§‹åŒ–GPIO	
 }
-//´®¿Ú·¢ËÍÒ»¸ö×Ö½Ú
-static void MYUSART_SendData(u8 data)
+//ä¸²å£å‘é€ä¸€ä¸ªå­—èŠ‚
+static void MYUSART_SendData(uint8_t data)
 {
 	while((USART2->SR&0X40)==0); 
 	USART2->DR = data;
 }
-//·¢ËÍ°üÍ·
+//å‘é€åŒ…å¤´
 static void SendHead(void)
 {
 	MYUSART_SendData(0xEF);
 	MYUSART_SendData(0x01);
 }
-//·¢ËÍµØÖ·
+//å‘é€åœ°å€
 static void SendAddr(void)
 {
 	MYUSART_SendData(AS608Addr>>24);
@@ -105,35 +105,35 @@ static void SendAddr(void)
 	MYUSART_SendData(AS608Addr>>8);
 	MYUSART_SendData(AS608Addr);
 }
-//·¢ËÍ°ü±êÊ¶,
-static void SendFlag(u8 flag)
+//å‘é€åŒ…æ ‡è¯†,
+static void SendFlag(uint8_t flag)
 {
 	MYUSART_SendData(flag);
 }
-//·¢ËÍ°ü³¤¶È
+//å‘é€åŒ…é•¿åº¦
 static void SendLength(int length)
 {
 	MYUSART_SendData(length>>8);
 	MYUSART_SendData(length);
 }
-//·¢ËÍÖ¸ÁîÂë
-static void Sendcmd(u8 cmd)
+//å‘é€æŒ‡ä»¤ç 
+static void Sendcmd(uint8_t cmd)
 {
 	MYUSART_SendData(cmd);
 }
-//·¢ËÍĞ£ÑéºÍ
-static void SendCheck(u16 check)
+//å‘é€æ ¡éªŒå’Œ
+static void SendCheck(uint16_t check)
 {
 	MYUSART_SendData(check>>8);
 	MYUSART_SendData(check);
 }
-//ÅĞ¶ÏÖĞ¶Ï½ÓÊÕµÄÊı×éÓĞÃ»ÓĞÓ¦´ğ°ü
-//waittimeÎªµÈ´ıÖĞ¶Ï½ÓÊÕÊı¾İµÄÊ±¼ä£¨µ¥Î»1ms£©
-//·µ»ØÖµ£ºÊı¾İ°üÊ×µØÖ·
-static u8 *JudgeStr(u16 waittime)
+//åˆ¤æ–­ä¸­æ–­æ¥æ”¶çš„æ•°ç»„æœ‰æ²¡æœ‰åº”ç­”åŒ…
+//waittimeä¸ºç­‰å¾…ä¸­æ–­æ¥æ”¶æ•°æ®çš„æ—¶é—´ï¼ˆå•ä½1msï¼‰
+//è¿”å›å€¼ï¼šæ•°æ®åŒ…é¦–åœ°å€
+static uint8_t *JudgeStr(uint16_t waittime)
 {
 	char *data;
-	u8 str[8];
+	uint8_t str[8];
 	str[0]=0xef;					str[1]=0x01;
 	str[2]=AS608Addr>>24;	str[3]=AS608Addr>>16;		
 	str[4]=AS608Addr>>8;	str[5]=AS608Addr;				
@@ -142,30 +142,30 @@ static u8 *JudgeStr(u16 waittime)
 	while(--waittime)
 	{
 		delay_ms(1);
-		if(USART2_RX_STA&0X8000)//½ÓÊÕµ½Ò»´ÎÊı¾İ
+		if(USART2_RX_STA&0X8000)//æ¥æ”¶åˆ°ä¸€æ¬¡æ•°æ®
 		{
 			USART2_RX_STA=0;
 			data=strstr((const char*)USART2_RX_BUF,(const char*)str);
 			if(data)
-				return (u8*)data;	
+				return (uint8_t*)data;	
 		}
 	}
 	return 0;
 }
-//Â¼ÈëÍ¼Ïñ PS_GetImage
-//¹¦ÄÜ:Ì½²âÊÖÖ¸£¬Ì½²âµ½ºóÂ¼ÈëÖ¸ÎÆÍ¼Ïñ´æÓÚImageBuffer¡£ 
-//Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_GetImage(void)
+//å½•å…¥å›¾åƒ PS_GetImage
+//åŠŸèƒ½:æ¢æµ‹æ‰‹æŒ‡ï¼Œæ¢æµ‹åˆ°åå½•å…¥æŒ‡çº¹å›¾åƒå­˜äºImageBufferã€‚ 
+//æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_GetImage(void)
 {
-  u16 temp;
-  u8  ensure;
-	u8  *data;
+    uint16_t temp;
+    uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x03);
 	Sendcmd(0x01);
-  temp =  0x01+0x03+0x01;
+    temp =  0x01+0x03+0x01;
 	SendCheck(temp);
 	data=JudgeStr(2000);
 	if(data)
@@ -174,18 +174,18 @@ u8 PS_GetImage(void)
 		ensure=0xff;
 	return ensure;
 }
-//Éú³ÉÌØÕ÷ PS_GenChar
-//¹¦ÄÜ:½«ImageBufferÖĞµÄÔ­Ê¼Í¼ÏñÉú³ÉÖ¸ÎÆÌØÕ÷ÎÄ¼ş´æÓÚCharBuffer1»òCharBuffer2			 
-//²ÎÊı:BufferID --> charBuffer1:0x01	charBuffer1:0x02												
-//Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_GenChar(u8 BufferID)
+//ç”Ÿæˆç‰¹å¾ PS_GenChar
+//åŠŸèƒ½:å°†ImageBufferä¸­çš„åŸå§‹å›¾åƒç”ŸæˆæŒ‡çº¹ç‰¹å¾æ–‡ä»¶å­˜äºCharBuffer1æˆ–CharBuffer2			 
+//å‚æ•°:BufferID --> charBuffer1:0x01	charBuffer1:0x02												
+//æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_GenChar(uint8_t BufferID)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x04);
 	Sendcmd(0x02);
 	MYUSART_SendData(BufferID);
@@ -198,17 +198,17 @@ u8 PS_GenChar(u8 BufferID)
 		ensure=0xff;
 	return ensure;
 }
-//¾«È·±È¶ÔÁ½Ã¶Ö¸ÎÆÌØÕ÷ PS_Match
-//¹¦ÄÜ:¾«È·±È¶ÔCharBuffer1 ÓëCharBuffer2 ÖĞµÄÌØÕ÷ÎÄ¼ş 
-//Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_Match(void)
+//ç²¾ç¡®æ¯”å¯¹ä¸¤æšæŒ‡çº¹ç‰¹å¾ PS_Match
+//åŠŸèƒ½:ç²¾ç¡®æ¯”å¯¹CharBuffer1 ä¸CharBuffer2 ä¸­çš„ç‰¹å¾æ–‡ä»¶ 
+//æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_Match(void)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x03);
 	Sendcmd(0x03);
 	temp = 0x01+0x03+0x03;
@@ -220,18 +220,18 @@ u8 PS_Match(void)
 		ensure=0xff;
 	return ensure;
 }
-//ËÑË÷Ö¸ÎÆ PS_Search
-//¹¦ÄÜ:ÒÔCharBuffer1»òCharBuffer2ÖĞµÄÌØÕ÷ÎÄ¼şËÑË÷Õû¸ö»ò²¿·ÖÖ¸ÎÆ¿â.ÈôËÑË÷µ½£¬Ôò·µ»ØÒ³Âë¡£			
-//²ÎÊı:  BufferID @ref CharBuffer1	CharBuffer2
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö£¬Ò³Âë£¨ÏàÅäÖ¸ÎÆÄ£°å£©
-u8 PS_Search(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)
+//æœç´¢æŒ‡çº¹ PS_Search
+//åŠŸèƒ½:ä»¥CharBuffer1æˆ–CharBuffer2ä¸­çš„ç‰¹å¾æ–‡ä»¶æœç´¢æ•´ä¸ªæˆ–éƒ¨åˆ†æŒ‡çº¹åº“.è‹¥æœç´¢åˆ°ï¼Œåˆ™è¿”å›é¡µç ã€‚			
+//å‚æ•°:  BufferID @ref CharBuffer1	CharBuffer2
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—ï¼Œé¡µç ï¼ˆç›¸é…æŒ‡çº¹æ¨¡æ¿ï¼‰
+uint8_t PS_Search(uint8_t BufferID,uint16_t StartPage,uint16_t PageNum,SearchResult *p)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x08);
 	Sendcmd(0x04);
 	MYUSART_SendData(BufferID);
@@ -240,8 +240,8 @@ u8 PS_Search(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)
 	MYUSART_SendData(PageNum>>8);
 	MYUSART_SendData(PageNum);
 	temp = 0x01+0x08+0x04+BufferID
-	+(StartPage>>8)+(u8)StartPage
-	+(PageNum>>8)+(u8)PageNum;
+	+(StartPage>>8)+(uint8_t)StartPage
+	+(PageNum>>8)+(uint8_t)PageNum;
 	SendCheck(temp);
 	data=JudgeStr(2000);
 	if(data)
@@ -254,17 +254,17 @@ u8 PS_Search(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)
 		ensure = 0xff;
 	return ensure;	
 }
-//ºÏ²¢ÌØÕ÷£¨Éú³ÉÄ£°å£©PS_RegModel
-//¹¦ÄÜ:½«CharBuffer1ÓëCharBuffer2ÖĞµÄÌØÕ÷ÎÄ¼şºÏ²¢Éú³É Ä£°å,½á¹û´æÓÚCharBuffer1ÓëCharBuffer2	
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_RegModel(void)
+//åˆå¹¶ç‰¹å¾ï¼ˆç”Ÿæˆæ¨¡æ¿ï¼‰PS_RegModel
+//åŠŸèƒ½:å°†CharBuffer1ä¸CharBuffer2ä¸­çš„ç‰¹å¾æ–‡ä»¶åˆå¹¶ç”Ÿæˆ æ¨¡æ¿,ç»“æœå­˜äºCharBuffer1ä¸CharBuffer2	
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_RegModel(void)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x03);
 	Sendcmd(0x05);
 	temp = 0x01+0x03+0x05;
@@ -276,26 +276,26 @@ u8 PS_RegModel(void)
 		ensure=0xff;
 	return ensure;		
 }
-//´¢´æÄ£°å PS_StoreChar
-//¹¦ÄÜ:½« CharBuffer1 »ò CharBuffer2 ÖĞµÄÄ£°åÎÄ¼ş´æµ½ PageID ºÅflashÊı¾İ¿âÎ»ÖÃ¡£			
-//²ÎÊı:  BufferID @ref charBuffer1:0x01	charBuffer1:0x02
-//       PageID£¨Ö¸ÎÆ¿âÎ»ÖÃºÅ£©
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_StoreChar(u8 BufferID,u16 PageID)
+//å‚¨å­˜æ¨¡æ¿ PS_StoreChar
+//åŠŸèƒ½:å°† CharBuffer1 æˆ– CharBuffer2 ä¸­çš„æ¨¡æ¿æ–‡ä»¶å­˜åˆ° PageID å·flashæ•°æ®åº“ä½ç½®ã€‚			
+//å‚æ•°:  BufferID @ref charBuffer1:0x01	charBuffer1:0x02
+//       PageIDï¼ˆæŒ‡çº¹åº“ä½ç½®å·ï¼‰
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_StoreChar(uint8_t BufferID,uint16_t PageID)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x06);
 	Sendcmd(0x06);
 	MYUSART_SendData(BufferID);
 	MYUSART_SendData(PageID>>8);
 	MYUSART_SendData(PageID);
 	temp = 0x01+0x06+0x06+BufferID
-	+(PageID>>8)+(u8)PageID;
+	+(PageID>>8)+(uint8_t)PageID;
 	SendCheck(temp);
 	data=JudgeStr(2000);
 	if(data)
@@ -304,18 +304,18 @@ u8 PS_StoreChar(u8 BufferID,u16 PageID)
 		ensure=0xff;
 	return ensure;	
 }
-//É¾³ıÄ£°å PS_DeletChar
-//¹¦ÄÜ:  É¾³ıflashÊı¾İ¿âÖĞÖ¸¶¨IDºÅ¿ªÊ¼µÄN¸öÖ¸ÎÆÄ£°å
-//²ÎÊı:  PageID(Ö¸ÎÆ¿âÄ£°åºÅ)£¬NÉ¾³ıµÄÄ£°å¸öÊı¡£
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_DeletChar(u16 PageID,u16 N)
+//åˆ é™¤æ¨¡æ¿ PS_DeletChar
+//åŠŸèƒ½:  åˆ é™¤flashæ•°æ®åº“ä¸­æŒ‡å®šIDå·å¼€å§‹çš„Nä¸ªæŒ‡çº¹æ¨¡æ¿
+//å‚æ•°:  PageID(æŒ‡çº¹åº“æ¨¡æ¿å·)ï¼ŒNåˆ é™¤çš„æ¨¡æ¿ä¸ªæ•°ã€‚
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_DeletChar(uint16_t PageID,uint16_t N)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x07);
 	Sendcmd(0x0C);
 	MYUSART_SendData(PageID>>8);
@@ -323,8 +323,8 @@ u8 PS_DeletChar(u16 PageID,u16 N)
 	MYUSART_SendData(N>>8);
 	MYUSART_SendData(N);
 	temp = 0x01+0x07+0x0C
-	+(PageID>>8)+(u8)PageID
-	+(N>>8)+(u8)N;
+	+(PageID>>8)+(uint8_t)PageID
+	+(N>>8)+(uint8_t)N;
 	SendCheck(temp);
 	data=JudgeStr(2000);
 	if(data)
@@ -333,18 +333,18 @@ u8 PS_DeletChar(u16 PageID,u16 N)
 		ensure=0xff;
 	return ensure;
 }
-//Çå¿ÕÖ¸ÎÆ¿â PS_Empty
-//¹¦ÄÜ:  É¾³ıflashÊı¾İ¿âÖĞËùÓĞÖ¸ÎÆÄ£°å
-//²ÎÊı:  ÎŞ
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_Empty(void)
+//æ¸…ç©ºæŒ‡çº¹åº“ PS_Empty
+//åŠŸèƒ½:  åˆ é™¤flashæ•°æ®åº“ä¸­æ‰€æœ‰æŒ‡çº¹æ¨¡æ¿
+//å‚æ•°:  æ— 
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_Empty(void)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x03);
 	Sendcmd(0x0D);
 	temp = 0x01+0x03+0x0D;
@@ -356,18 +356,18 @@ u8 PS_Empty(void)
 		ensure=0xff;
 	return ensure;
 }
-//Ğ´ÏµÍ³¼Ä´æÆ÷ PS_WriteReg
-//¹¦ÄÜ:  Ğ´Ä£¿é¼Ä´æÆ÷
-//²ÎÊı:  ¼Ä´æÆ÷ĞòºÅRegNum:4\5\6
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_WriteReg(u8 RegNum,u8 DATA)
+//å†™ç³»ç»Ÿå¯„å­˜å™¨ PS_WriteReg
+//åŠŸèƒ½:  å†™æ¨¡å—å¯„å­˜å™¨
+//å‚æ•°:  å¯„å­˜å™¨åºå·RegNum:4\5\6
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_WriteReg(uint8_t RegNum,uint8_t DATA)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x05);
 	Sendcmd(0x0E);
 	MYUSART_SendData(RegNum);
@@ -380,23 +380,23 @@ u8 PS_WriteReg(u8 RegNum,u8 DATA)
 	else
 		ensure=0xff;
 	if(ensure==0)
-		printf("\r\nÉèÖÃ²ÎÊı³É¹¦£¡");
+		printf("\r\nè®¾ç½®å‚æ•°æˆåŠŸï¼");
 	else
 		printf("\r\n%s",EnsureMessage(ensure));
 	return ensure;
 }
-//¶ÁÏµÍ³»ù±¾²ÎÊı PS_ReadSysPara
-//¹¦ÄÜ:  ¶ÁÈ¡Ä£¿éµÄ»ù±¾²ÎÊı£¨²¨ÌØÂÊ£¬°ü´óĞ¡µÈ)
-//²ÎÊı:  ÎŞ
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö + »ù±¾²ÎÊı£¨16bytes£©
-u8 PS_ReadSysPara(SysPara *p)
+//è¯»ç³»ç»ŸåŸºæœ¬å‚æ•° PS_ReadSysPara
+//åŠŸèƒ½:  è¯»å–æ¨¡å—çš„åŸºæœ¬å‚æ•°ï¼ˆæ³¢ç‰¹ç‡ï¼ŒåŒ…å¤§å°ç­‰)
+//å‚æ•°:  æ— 
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­— + åŸºæœ¬å‚æ•°ï¼ˆ16bytesï¼‰
+uint8_t PS_ReadSysPara(SysPara *p)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);///å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x03);
 	Sendcmd(0x0F);
 	temp = 0x01+0x03+0x0F;
@@ -415,27 +415,27 @@ u8 PS_ReadSysPara(SysPara *p)
 		ensure=0xff;
 	if(ensure==0x00)
 	{
-		printf("\r\nÄ£¿é×î´óÖ¸ÎÆÈİÁ¿=%d",p->PS_max);
-		printf("\r\n¶Ô±ÈµÈ¼¶=%d",p->PS_level);
-		printf("\r\nµØÖ·=%x",p->PS_addr);
-		printf("\r\n²¨ÌØÂÊ=%d\r\n",p->PS_N*9600);
+		printf("\r\næ¨¡å—æœ€å¤§æŒ‡çº¹å®¹é‡=%d",p->PS_max);
+		printf("\r\nå¯¹æ¯”ç­‰çº§=%d",p->PS_level);
+		printf("\r\nåœ°å€=%x",p->PS_addr);
+		printf("\r\næ³¢ç‰¹ç‡=%d\r\n",p->PS_N*9600);
 	}
 	else 
 			printf("\r\n%s",EnsureMessage(ensure));
 	return ensure;
 }
-//ÉèÖÃÄ£¿éµØÖ· PS_SetAddr
-//¹¦ÄÜ:  ÉèÖÃÄ£¿éµØÖ·
-//²ÎÊı:  PS_addr
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_SetAddr(u32 PS_addr)
+//è®¾ç½®æ¨¡å—åœ°å€ PS_SetAddr
+//åŠŸèƒ½:  è®¾ç½®æ¨¡å—åœ°å€
+//å‚æ•°:  PS_addr
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_SetAddr(u32 PS_addr)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x07);
 	Sendcmd(0x15);
 	MYUSART_SendData(PS_addr>>24);
@@ -443,10 +443,10 @@ u8 PS_SetAddr(u32 PS_addr)
 	MYUSART_SendData(PS_addr>>8);
 	MYUSART_SendData(PS_addr);
 	temp = 0x01+0x07+0x15
-	+(u8)(PS_addr>>24)+(u8)(PS_addr>>16)
-	+(u8)(PS_addr>>8) +(u8)PS_addr;				
+	+(uint8_t)(PS_addr>>24)+(uint8_t)(PS_addr>>16)
+	+(uint8_t)(PS_addr>>8) +(uint8_t)PS_addr;				
 	SendCheck(temp);
-	AS608Addr=PS_addr;//·¢ËÍÍêÖ¸Áî£¬¸ü»»µØÖ·
+	AS608Addr=PS_addr;//å‘é€å®ŒæŒ‡ä»¤ï¼Œæ›´æ¢åœ°å€
   data=JudgeStr(2000);
 	if(data)
 		ensure=data[9];
@@ -454,23 +454,23 @@ u8 PS_SetAddr(u32 PS_addr)
 		ensure=0xff;	
 		AS608Addr = PS_addr;
 	if(ensure==0x00)
-		printf("\r\nÉèÖÃµØÖ·³É¹¦£¡");
+		printf("\r\nï¿½ï¿½ï¿½Ãµï¿½Ö·ï¿½É¹ï¿½ï¿½ï¿½");
 	else
 		printf("\r\n%s",EnsureMessage(ensure));
 	return ensure;
 }
-//¹¦ÄÜ£º Ä£¿éÄÚ²¿ÎªÓÃ»§¿ª±ÙÁË256bytesµÄFLASH¿Õ¼äÓÃÓÚ´æÓÃ»§¼ÇÊÂ±¾,
-//	¸Ã¼ÇÊÂ±¾Âß¼­ÉÏ±»·Ö³É 16 ¸öÒ³¡£
-//²ÎÊı:  NotePageNum(0~15),Byte32(ÒªĞ´ÈëÄÚÈİ£¬32¸ö×Ö½Ú)
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö
-u8 PS_WriteNotepad(u8 NotePageNum,u8 *Byte32)
+//åŠŸèƒ½ï¼š æ¨¡å—å†…éƒ¨ä¸ºç”¨æˆ·å¼€è¾Ÿäº†256bytesçš„FLASHç©ºé—´ç”¨äºå­˜ç”¨æˆ·è®°äº‹æœ¬,
+//	è¯¥è®°äº‹æœ¬é€»è¾‘ä¸Šè¢«åˆ†æˆ 16 ä¸ªé¡µã€‚
+//å‚æ•°:  NotePageNum(0~15),Byte32(è¦å†™å…¥å†…å®¹ï¼Œ32ä¸ªå­—èŠ‚)
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—
+uint8_t PS_WriteNotepad(uint8_t NotePageNum,uint8_t *Byte32)
 {
-	u16 temp;
-  u8  ensure,i;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure,i;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(36);
 	Sendcmd(0x18);
 	MYUSART_SendData(NotePageNum);
@@ -488,18 +488,18 @@ u8 PS_WriteNotepad(u8 NotePageNum,u8 *Byte32)
 		ensure=0xff;
 	return ensure;
 }
-//¶Á¼ÇÊÂPS_ReadNotepad
-//¹¦ÄÜ£º  ¶ÁÈ¡FLASHÓÃ»§ÇøµÄ128bytesÊı¾İ
-//²ÎÊı:  NotePageNum(0~15)
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö+ÓÃ»§ĞÅÏ¢
-u8 PS_ReadNotepad(u8 NotePageNum,u8 *Byte32)
+//è¯»è®°äº‹PS_ReadNotepad
+//åŠŸèƒ½ï¼š  è¯»å–FLASHç”¨æˆ·åŒºçš„128bytesæ•°æ®
+//å‚æ•°:  NotePageNum(0~15)
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—+ç”¨æˆ·ä¿¡æ¯
+uint8_t PS_ReadNotepad(uint8_t NotePageNum,uint8_t *Byte32)
 {
-	u16 temp;
-  u8  ensure,i;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure,i;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x04);
 	Sendcmd(0x19);
 	MYUSART_SendData(NotePageNum);
@@ -518,20 +518,20 @@ u8 PS_ReadNotepad(u8 NotePageNum,u8 *Byte32)
 		ensure=0xff;
 	return ensure;
 }
-//¸ßËÙËÑË÷PS_HighSpeedSearch
-//¹¦ÄÜ£ºÒÔ CharBuffer1»òCharBuffer2ÖĞµÄÌØÕ÷ÎÄ¼ş¸ßËÙËÑË÷Õû¸ö»ò²¿·ÖÖ¸ÎÆ¿â¡£
-//		  ÈôËÑË÷µ½£¬Ôò·µ»ØÒ³Âë,¸ÃÖ¸Áî¶ÔÓÚµÄÈ·´æÔÚÓÚÖ¸ÎÆ¿âÖĞ £¬ÇÒµÇÂ¼Ê±ÖÊÁ¿
-//		  ºÜºÃµÄÖ¸ÎÆ£¬»áºÜ¿ì¸ø³öËÑË÷½á¹û¡£
-//²ÎÊı:  BufferID£¬ StartPage(ÆğÊ¼Ò³)£¬PageNum£¨Ò³Êı£©
-//ËµÃ÷:  Ä£¿é·µ»ØÈ·ÈÏ×Ö+Ò³Âë£¨ÏàÅäÖ¸ÎÆÄ£°å£©
-u8 PS_HighSpeedSearch(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)
+//é«˜é€Ÿæœç´¢PS_HighSpeedSearch
+//åŠŸèƒ½ï¼šä»¥ CharBuffer1æˆ–CharBuffer2ä¸­çš„ç‰¹å¾æ–‡ä»¶é«˜é€Ÿæœç´¢æ•´ä¸ªæˆ–éƒ¨åˆ†æŒ‡çº¹åº“ã€‚
+//		  è‹¥æœç´¢åˆ°ï¼Œåˆ™è¿”å›é¡µç ,è¯¥æŒ‡ä»¤å¯¹äºçš„ç¡®å­˜åœ¨äºæŒ‡çº¹åº“ä¸­ ï¼Œä¸”ç™»å½•æ—¶è´¨é‡
+//		  å¾ˆå¥½çš„æŒ‡çº¹ï¼Œä¼šå¾ˆå¿«ç»™å‡ºæœç´¢ç»“æœã€‚
+//å‚æ•°:  BufferIDï¼Œ StartPage(èµ·å§‹é¡µ)ï¼ŒPageNumï¼ˆé¡µæ•°ï¼‰
+//è¯´æ˜:  æ¨¡å—è¿”å›ç¡®è®¤å­—+é¡µç ï¼ˆç›¸é…æŒ‡çº¹æ¨¡æ¿ï¼‰
+uint8_t PS_HighSpeedSearch(uint8_t BufferID,uint16_t StartPage,uint16_t PageNum,SearchResult *p)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);//å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x08);
 	Sendcmd(0x1b);
 	MYUSART_SendData(BufferID);
@@ -540,8 +540,8 @@ u8 PS_HighSpeedSearch(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)
 	MYUSART_SendData(PageNum>>8);
 	MYUSART_SendData(PageNum);
 	temp = 0x01+0x08+0x1b+BufferID
-	+(StartPage>>8)+(u8)StartPage
-	+(PageNum>>8)+(u8)PageNum;
+	+(StartPage>>8)+(uint8_t)StartPage
+	+(PageNum>>8)+(uint8_t)PageNum;
 	SendCheck(temp);
 	data=JudgeStr(2000);
  	if(data)
@@ -554,18 +554,18 @@ u8 PS_HighSpeedSearch(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)
 		ensure=0xff;
 	return ensure;
 }
-//¶ÁÓĞĞ§Ä£°å¸öÊı PS_ValidTempleteNum
-//¹¦ÄÜ£º¶ÁÓĞĞ§Ä£°å¸öÊı
-//²ÎÊı: ÎŞ
-//ËµÃ÷: Ä£¿é·µ»ØÈ·ÈÏ×Ö+ÓĞĞ§Ä£°å¸öÊıValidN
-u8 PS_ValidTempleteNum(u16 *ValidN)
+//è¯»æœ‰æ•ˆæ¨¡æ¿ä¸ªæ•° PS_ValidTempleteNum
+//åŠŸèƒ½ï¼šè¯»æœ‰æ•ˆæ¨¡æ¿ä¸ªæ•°
+//å‚æ•°: æ— 
+//è¯´æ˜: æ¨¡å—è¿”å›ç¡®è®¤å­—+æœ‰æ•ˆæ¨¡æ¿ä¸ªæ•°ValidN
+uint8_t PS_ValidTempleteNum(uint16_t *ValidN)
 {
-	u16 temp;
-  u8  ensure;
-	u8  *data;
+	uint16_t temp;
+  uint8_t  ensure;
+	uint8_t  *data;
 	SendHead();
 	SendAddr();
-	SendFlag(0x01);//ÃüÁî°ü±êÊ¶
+	SendFlag(0x01);///å‘½ä»¤åŒ…æ ‡è¯†
 	SendLength(0x03);
 	Sendcmd(0x1d);
 	temp = 0x01+0x03+0x1d;
@@ -581,16 +581,16 @@ u8 PS_ValidTempleteNum(u16 *ValidN)
 	
 	if(ensure==0x00)
 	{
-		printf("\r\nÖ¸ÎÆÓĞ%d¸ö\r\n",(data[10]<<8)+data[11]);
+		printf("\r\nÖ¸ï¿½ï¿½ï¿½ï¿½%dï¿½ï¿½\r\n",(data[10]<<8)+data[11]);
 	}
 	else
 		printf("\r\n%s",EnsureMessage(ensure));
 	return ensure;
 }
-//ÓëAS608ÎÕÊÖ PS_HandShake
-//²ÎÊı: PS_AddrµØÖ·Ö¸Õë
-//ËµÃ÷: Ä£¿é·µĞÂµØÖ·£¨ÕıÈ·µØÖ·£©	
-u8 PS_HandShake(u32 *PS_Addr)
+//ä¸AS608æ¡æ‰‹ PS_HandShake
+//å‚æ•°: PS_Addråœ°å€æŒ‡é’ˆ
+//è¯´æ˜: æ¨¡å—è¿”æ–°åœ°å€ï¼ˆæ­£ç¡®åœ°å€ï¼‰		
+uint8_t PS_HandShake(u32 *PS_Addr)
 {
 	SendHead();
 	SendAddr();
@@ -598,9 +598,9 @@ u8 PS_HandShake(u32 *PS_Addr)
 	MYUSART_SendData(0X00);
 	MYUSART_SendData(0X00);	
 	delay_ms(200);
-	if(USART2_RX_STA&0X8000)//½ÓÊÕµ½Êı¾İ
+	if(USART2_RX_STA&0X8000)//æ¥æ”¶åˆ°æ•°æ®
 	{		
-		if(//ÅĞ¶ÏÊÇ²»ÊÇÄ£¿é·µ»ØµÄÓ¦´ğ°ü				
+		if(//åˆ¤æ–­æ˜¯ä¸æ˜¯æ¨¡å—è¿”å›çš„åº”ç­”åŒ…						
 					USART2_RX_BUF[0]==0XEF
 				&&USART2_RX_BUF[1]==0X01
 				&&USART2_RX_BUF[6]==0X07
@@ -615,10 +615,10 @@ u8 PS_HandShake(u32 *PS_Addr)
 	}
 	return 1;		
 }
-//Ä£¿éÓ¦´ğ°üÈ·ÈÏÂëĞÅÏ¢½âÎö
-//¹¦ÄÜ£º½âÎöÈ·ÈÏÂë´íÎóĞÅÏ¢·µ»ØĞÅÏ¢
-//²ÎÊı: ensure
-const char *EnsureMessage(u8 ensure) 
+//æ¨¡å—åº”ç­”åŒ…ç¡®è®¤ç ä¿¡æ¯è§£æ
+//åŠŸèƒ½ï¼šè§£æç¡®è®¤ç é”™è¯¯ä¿¡æ¯è¿”å›ä¿¡æ¯
+//å‚æ•°: ensure
+const char *EnsureMessage(uint8_t ensure) 
 {
 	const char *p;
 	switch(ensure)
@@ -626,49 +626,49 @@ const char *EnsureMessage(u8 ensure)
 		case  0x00:
 			p="OK";break;		
 		case  0x01:
-			p="Êı¾İ°ü½ÓÊÕ´íÎó";break;
+			p="æ•°æ®åŒ…æ¥æ”¶é”™è¯¯";break;
 		case  0x02:
-			p="´«¸ĞÆ÷ÉÏÃ»ÓĞÊÖÖ¸";break;
+			p="ä¼ æ„Ÿå™¨ä¸Šæ²¡æœ‰æ‰‹æŒ‡Ö¸";break;
 		case  0x03:
-			p="Â¼ÈëÖ¸ÎÆÍ¼ÏñÊ§°Ü";break;
+			p="å½•å…¥æŒ‡çº¹å›¾åƒå¤±è´¥";break;
 		case  0x04:
-			p="Ö¸ÎÆÍ¼ÏñÌ«¸É¡¢Ì«µ­¶øÉú²»³ÉÌØÕ÷";break;
+			p="æŒ‡çº¹å›¾åƒå¤ªå¹²ã€å¤ªæ·¡è€Œç”Ÿä¸æˆç‰¹å¾";break;
 		case  0x05:
-			p="Ö¸ÎÆÍ¼ÏñÌ«Êª¡¢Ì«ºı¶øÉú²»³ÉÌØÕ÷";break;
+			p="æŒ‡çº¹å›¾åƒå¤ªæ¹¿ã€å¤ªç³Šè€Œç”Ÿä¸æˆç‰¹å¾ï¿½";break;
 		case  0x06:
-			p="Ö¸ÎÆÍ¼ÏñÌ«ÂÒ¶øÉú²»³ÉÌØÕ÷";break;
+			p="æŒ‡çº¹å›¾åƒå¤ªä¹±è€Œç”Ÿä¸æˆç‰¹å¾";break;
 		case  0x07:
-			p="Ö¸ÎÆÍ¼ÏñÕı³££¬µ«ÌØÕ÷µãÌ«ÉÙ£¨»òÃæ»ıÌ«Ğ¡£©¶øÉú²»³ÉÌØÕ÷";break;
+			p="æŒ‡çº¹å›¾åƒæ­£å¸¸ï¼Œä½†ç‰¹å¾ç‚¹å¤ªå°‘ï¼ˆæˆ–é¢ç§¯å¤ªå°ï¼‰è€Œç”Ÿä¸æˆç‰¹å¾";break;
 		case  0x08:
-			p="Ö¸ÎÆ²»Æ¥Åä";break;
+			p="æŒ‡çº¹ä¸åŒ¹é…";break;
 		case  0x09:
-			p="Ã»ËÑË÷µ½Ö¸ÎÆ";break;
+			p="æ²¡æœç´¢åˆ°æŒ‡çº¹";break;
 		case  0x0a:
-			p="ÌØÕ÷ºÏ²¢Ê§°Ü";break;
+			p="ç‰¹å¾åˆå¹¶å¤±è´¥";break;
 		case  0x0b:
-			p="·ÃÎÊÖ¸ÎÆ¿âÊ±µØÖ·ĞòºÅ³¬³öÖ¸ÎÆ¿â·¶Î§";
+			p="è®¿é—®æŒ‡çº¹åº“æ—¶åœ°å€åºå·è¶…å‡ºæŒ‡çº¹åº“èŒƒå›´";
 		case  0x10:
-			p="É¾³ıÄ£°åÊ§°Ü";break;
+			p="åˆ é™¤æ¨¡æ¿å¤±è´¥";break;
 		case  0x11:
-			p="Çå¿ÕÖ¸ÎÆ¿âÊ§°Ü";break;	
+			p="æ¸…ç©ºæŒ‡çº¹åº“å¤±è´¥";break;	
 		case  0x15:
-			p="»º³åÇøÄÚÃ»ÓĞÓĞĞ§Ô­Ê¼Í¼¶øÉú²»³ÉÍ¼Ïñ";break;
+			p="ç¼“å†²åŒºå†…æ²¡æœ‰æœ‰æ•ˆåŸå§‹å›¾è€Œç”Ÿä¸æˆå›¾åƒ";break;
 		case  0x18:
-			p="¶ÁĞ´ FLASH ³ö´í";break;
+			p="è¯»å†™ FLASH å‡ºé”™";break;
 		case  0x19:
-			p="Î´¶¨Òå´íÎó";break;
+			p="æœªå®šä¹‰é”™è¯¯";break;
 		case  0x1a:
-			p="ÎŞĞ§¼Ä´æÆ÷ºÅ";break;
+			p="æ— æ•ˆå¯„å­˜å™¨å·";break;
 		case  0x1b:
-			p="¼Ä´æÆ÷Éè¶¨ÄÚÈİ´íÎó";break;
+			p="å¯„å­˜å™¨è®¾å®šå†…å®¹é”™è¯¯";break;
 		case  0x1c:
-			p="¼ÇÊÂ±¾Ò³ÂëÖ¸¶¨´íÎó";break;
+			p="è®°äº‹æœ¬é¡µç æŒ‡å®šé”™è¯¯";break;
 		case  0x1f:
-			p="Ö¸ÎÆ¿âÂú";break;
+			p="æŒ‡çº¹åº“æ»¡";break;
 		case  0x20:
-			p="µØÖ·´íÎó";break;
+			p="åœ°å€é”™è¯¯";break;
 		default :
-			p="Ä£¿é·µ»ØÈ·ÈÏÂëÓĞÎó";break;
+			p="æ¨¡å—è¿”å›ç¡®è®¤ç æœ‰è¯¯";break;
 	}
  return p;	
 }

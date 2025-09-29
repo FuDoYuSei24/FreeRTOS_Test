@@ -232,7 +232,7 @@ void RFID_task(void *pvParameters){
             Chinese_Show_two(110,50,10,16,0);
 
             xEventGroupSetBits(EventGroupHandler,EVENTBIT_1);
-            printf("ʶ�𿨺ųɹ�\r\n");
+            printf("识别卡号成功\r\n");
         }
         else if(shibieka()==0){
             BEEP=1;
@@ -248,12 +248,12 @@ void RFID_task(void *pvParameters){
             BEEP=0;
             Chinese_Show_two(90,50,12,16,0);
             Chinese_Show_two(110,50,14,16,0);
-            printf("ʶ�𿨺�ʧ��\r\n");
+            printf("识别卡号失败\r\n");
             err++;
             if(err==3)
             {
             vTaskSuspend(SG90Task_Handler);
-            printf("错误超过三次锁死\r\n");
+            printf("错误超过三次锁死，舵机任务挂起\r\n");
             LCD_ShowString(0,100,260,16,16,"Task has been suspended");
             }
         }
@@ -263,7 +263,45 @@ void RFID_task(void *pvParameters){
 
 void AS608_task(void *pvParameters){
     while(1){
+        if(PS_Sta){//检测PS_Sta状态，如果有手指按下
+            if(press_FR()==1){
+                BEEP=1;
+                delay_xms(100);
+                BEEP=0;
+                Chinese_Show_two(30,25,0,16,0);
+                Chinese_Show_two(50,25,2,16,0);
+                Chinese_Show_two(70,25,4,16,0);
+                Chinese_Show_two(90,25,6,16,0);
+                Chinese_Show_two(110,25,8,16,0);
+                Chinese_Show_two(130,25,10,16,0);
+                xEventGroupSetBits(EventGroupHandler,EVENTBIT_2);
+                printf("指纹识别成功");
+            }
+            else if(press_FR()==0){
+                BEEP=1;
+                delay_xms(50);
+				BEEP=0;
+				delay_xms(50);
+				BEEP=1;
+				delay_xms(50);
+				BEEP=0;
+				delay_xms(50);
+				BEEP=1;
+				delay_xms(50);
+				BEEP=0;
+                Chinese_Show_two(110,25,12,16,0);
+	            Chinese_Show_two(130,25,14,16,0);
+			    printf("指纹识别失败");
+                err++;
+                if(err==3){
+                    vTaskSuspend(SG90Task_Handler);
+                    printf("舵机任务挂起\r\n");
+                    LCD_ShowString(0,100,260,16,16,"Task has been suspended");
+                }
+            }
 
+        }
+        vTaskDelay(100);
     }
 }
 
