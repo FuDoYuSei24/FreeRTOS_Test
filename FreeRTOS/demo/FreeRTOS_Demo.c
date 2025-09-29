@@ -221,7 +221,43 @@ void LCD_task(void *pvParameters){
 
 void RFID_task(void *pvParameters){
     while(1){
-        
+        if(rfidflag==1||shibieka()){
+            BEEP=1;
+            delay_xms(100);
+            BEEP=0;
+            Chinese_Show_two(30,50,16,16,0);
+            Chinese_Show_two(50,50,18,16,0);
+            Chinese_Show_two(70,50,20,16,0);
+            Chinese_Show_two(90,50,8,16,0);
+            Chinese_Show_two(110,50,10,16,0);
+
+            xEventGroupSetBits(EventGroupHandler,EVENTBIT_1);
+            printf("ʶ�𿨺ųɹ�\r\n");
+        }
+        else if(shibieka()==0){
+            BEEP=1;
+            delay_xms(50);
+            BEEP=0;
+            delay_xms(50);
+            BEEP=1;
+            delay_xms(50);
+            BEEP=0;
+            delay_xms(50);
+            BEEP=1;
+            delay_xms(50);
+            BEEP=0;
+            Chinese_Show_two(90,50,12,16,0);
+            Chinese_Show_two(110,50,14,16,0);
+            printf("ʶ�𿨺�ʧ��\r\n");
+            err++;
+            if(err==3)
+            {
+            vTaskSuspend(SG90Task_Handler);
+            printf("错误超过三次锁死\r\n");
+            LCD_ShowString(0,100,260,16,16,"Task has been suspended");
+            }
+        }
+        vTaskDelay(100);
     }
 }
 
